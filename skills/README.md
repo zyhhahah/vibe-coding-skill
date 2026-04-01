@@ -24,3 +24,4 @@ skills/
 ## 当前技能
 
 - `long-context-handoff`: 长对话交接与上下文压缩
+- `sync-ai-assets`: 仓库资产同步与发布

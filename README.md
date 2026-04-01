@@ -18,7 +18,8 @@
 ├── prompts/        # 可单独复用的提示词
 ├── playbooks/      # 一整套工作流、方法论、操作步骤
 ├── templates/      # 可填空复用的模板
-└── references/     # 稳定参考资料、术语、清单、约束
+├── references/     # 稳定参考资料、术语、清单、约束
+└── tools/          # 自动化脚本与发布辅助工具
 ```
 
 ### `skills/`
@@ -98,6 +99,17 @@ prompts/
 - 风格指南
 - 常见坑清单
 
+### `tools/`
+
+存放帮助你维护、发布和同步 AI 资产的自动化工具。
+
+适合放：
+
+- 一键同步脚本
+- 资产检查脚本
+- 批量整理脚本
+- 发布辅助工具
+
 ## 收录原则
 
 - 优先收录“跨项目可复用”的内容
@@ -116,6 +128,60 @@ prompts/
 - `skills/long-context-handoff`
   - 解决长对话变慢、跑偏、上下文衰减的问题
   - 提供交接摘要模板、新对话启动模板、分阶段压缩方法和滚动摘要方法
+- `skills/sync-ai-assets`
+  - 用于检查仓库变更、草拟提交说明并触发同步脚本
+- `tools/sync-assets.ps1`
+  - Windows 友好的 AI 资产一键同步脚本
+- `sync-assets.cmd`
+  - 仓库根目录下的快速入口
+
+## 如何同步资产
+
+这个仓库默认提供两种同步方式：终端脚本和对话式 skill。
+
+### 方式一：终端一键同步
+
+在仓库根目录执行：
+
+```powershell
+.\sync-assets.cmd
+```
+
+这会默认：
+
+- 扫描仓库里全部未提交的变更
+- 显示将要同步的文件
+- 自动生成提交说明（如果你没传）
+- 执行 `git add --all`、`git commit`、`git push`
+
+如果你想先预览，不真正提交：
+
+```powershell
+powershell.exe -NoProfile -ExecutionPolicy Bypass -File "tools/sync-assets.ps1" -DryRun
+```
+
+如果你想自定义提交说明：
+
+```powershell
+.\sync-assets.cmd -Message "Sync AI assets: skills, tooling"
+```
+
+### 方式二：在 Cursor 对话里触发
+
+仓库里提供了 `skills/sync-ai-assets` 这份技能资产，用来规范“检查变更 -> 总结范围 -> 生成提交说明 -> 触发同步”的流程。
+
+常见说法：
+
+- 同步我的 AI 资产
+- 把刚做好的 skill 推到 GitHub
+- 先预览这次会同步哪些文件
+- 给这次资产更新生成一个合适的提交说明并发布
+
+### 常用建议
+
+- 如果只是想确认范围，先用 `-DryRun`
+- 如果仓库里有与你这次发布无关的改动，先清理或拆分
+- 如果有敏感文件，不要直接同步
 
 ## 推荐的后续补充方向
 
