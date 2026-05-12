@@ -125,15 +125,48 @@ prompts/
 
 ## 当前已收录
 
-- `skills/long-context-handoff`
-  - 解决长对话变慢、跑偏、上下文衰减的问题
-  - 提供交接摘要模板、新对话启动模板、分阶段压缩方法和滚动摘要方法
-- `skills/sync-ai-assets`
-  - 用于检查仓库变更、草拟提交说明并触发同步脚本
-- `tools/sync-assets.ps1`
-  - Windows 友好的 AI 资产一键同步脚本
-- `sync-assets.cmd`
-  - 仓库根目录下的快速入口
+### 自有 Skills
+
+- `skills/long-context-handoff` — 长对话压缩交接，解决上下文衰减问题
+- `skills/sync-ai-assets` — 检查仓库变更、草拟提交说明并触发同步
+
+### Engineering（工程技能）
+
+从 [Matt Pocock Skills](https://github.com/mattpocock/skills)（MIT License）引入：
+
+- **[diagnose](./skills/engineering/diagnose/SKILL.md)** — 系统化调试流程：复现 → 最小化 → 假设 → 插桩 → 修复 → 回归测试
+- **[grill-me](./skills/engineering/grill-me/SKILL.md)** — 无情追问你的设计方案，直到每个决策分支都清晰
+- **[grill-with-docs](./skills/engineering/grill-with-docs/SKILL.md)** — 同上，但会同步更新 CONTEXT.md 和 ADR 文档
+- **[improve-codebase-architecture](./skills/engineering/improve-codebase-architecture/SKILL.md)** — 扫描代码找出"深模块"重构机会
+- **[prototype](./skills/engineering/prototype/SKILL.md)** — 快速搭建可抛弃的原型验证设计
+- **[setup-matt-pocock-skills](./skills/engineering/setup-matt-pocock-skills/SKILL.md)** — 初始化项目配置（Issue 追踪器、标签映射等）
+- **[tdd](./skills/engineering/tdd/SKILL.md)** — 红-绿-重构循环，一次一个垂直切片
+- **[to-issues](./skills/engineering/to-issues/SKILL.md)** — 把方案拆成独立可认领的 Issue
+- **[to-prd](./skills/engineering/to-prd/SKILL.md)** — 把对话内容总结成 PRD 并提交为 Issue
+- **[triage](./skills/engineering/triage/SKILL.md)** — 状态机驱动的 Issue 分类管理
+- **[zoom-out](./skills/engineering/zoom-out/SKILL.md)** — 让 AI 用高层视角解释代码
+
+### Productivity（生产力技能）
+
+从 [Matt Pocock Skills](https://github.com/mattpocock/skills)（MIT License）引入：
+
+- **[caveman](./skills/productivity/caveman/SKILL.md)** — 超压缩沟通模式，省 75% token
+- **[handoff](./skills/productivity/handoff/SKILL.md)** — 把当前对话压缩成交接文档，换 AI 继续工作
+- **[write-a-skill](./skills/productivity/write-a-skill/SKILL.md)** — 创建新的 Agent Skill（元技能）
+
+### Misc（偶尔使用）
+
+从 [Matt Pocock Skills](https://github.com/mattpocock/skills)（MIT License）引入：
+
+- **[git-guardrails-claude-code](./skills/misc/git-guardrails-claude-code/SKILL.md)** — 设置 Claude Code 钩子拦截危险 git 命令
+- **[migrate-to-shoehorn](./skills/misc/migrate-to-shoehorn/SKILL.md)** — 把测试中的 `as` 断言迁移到 shoehorn
+- **[scaffold-exercises](./skills/misc/scaffold-exercises/SKILL.md)** — 创建练习题目录结构
+- **[setup-pre-commit](./skills/misc/setup-pre-commit/SKILL.md)** — 配置 Husky pre-commit 钩子
+
+### Tools
+
+- `tools/sync-assets.ps1` — Windows 友好的 AI 资产一键同步脚本
+- `sync-assets.cmd` — 仓库根目录下的快速入口
 
 ## 如何同步资产
 
