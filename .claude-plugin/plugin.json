@@ -2,6 +2,7 @@
   "name": "vibe-coding-skills",
   "skills": [
     "./skills/sync-ai-assets",
+    "./skills/sync-claude-config",
     "./skills/long-context-handoff",
     "./skills/engineering/diagnose",
     "./skills/engineering/grill-me",

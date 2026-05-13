@@ -25,3 +25,4 @@ skills/
 
 - `long-context-handoff`: 长对话交接与上下文压缩
 - `sync-ai-assets`: 仓库资产同步与发布
+- `sync-claude-config`: Claude Code 配置同步与多机部署
