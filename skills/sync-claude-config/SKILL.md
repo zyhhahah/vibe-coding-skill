@@ -11,30 +11,42 @@ description: Sync Claude Code configuration (settings.json, installed skills) be
 - The user wants to set up Claude Code on a new machine with their existing skills.
 - The user has changed settings.json or installed/removed skills and wants to sync.
 
+## New Machine Bootstrap
+
+On a fresh machine with no skills installed, use the bootstrap script at the repo root:
+
+```powershell
+git clone https://github.com/zyhhahah/vibe-coding-skill.git
+cd vibe-coding-skill
+.\setup.ps1
+```
+
+To also restore your saved settings.json:
+
+```powershell
+.\setup.ps1 -RestoreSettings
+```
+
+After bootstrap, all skills (including this one) are available. Use `sync-claude-config -Pull` for ongoing updates.
+
 ## Script Location
 
-All operations delegate to the supporting script:
+All ongoing operations delegate to the supporting script:
 
 ```
-C:\Users\%USERPROFILE%\Downloads\skills-main\skills-main\vibe-coding-skill\skills\sync-claude-config\scripts\sync-config.ps1
+$env:USERPROFILE\vibe-coding-skill\skills\sync-claude-config\scripts\sync-config.ps1
 ```
 
-Use `$env:USERPROFILE` to construct the path on any machine.
+The script auto-discovers the repo path by following its own symlink. If you cloned to a custom location, pass `-RepoPath`.
 
 ## Workflows
 
-### Setup (first time on a machine)
+### Setup (re-link skills from an existing repo)
 
-Clones the repository and creates symlinks for all skills.
-
-```powershell
-& "$env:USERPROFILE\Downloads\skills-main\skills-main\vibe-coding-skill\skills\sync-claude-config\scripts\sync-config.ps1" -Setup
-```
-
-With preview:
+Creates symlinks for all skills found in the repo. Use this when you already have the repo cloned but need to re-link skills.
 
 ```powershell
-& "$env:USERPROFILE\Downloads\skills-main\skills-main\vibe-coding-skill\skills\sync-claude-config\scripts\sync-config.ps1" -Setup -DryRun
+& "$env:USERPROFILE\vibe-coding-skill\skills\sync-claude-config\scripts\sync-config.ps1" -Setup
 ```
 
 ### Push (local config to cloud)
@@ -44,19 +56,19 @@ Copies `.claude/settings.json` into the repo, commits, and pushes to GitHub.
 Preview first:
 
 ```powershell
-& "$env:USERPROFILE\Downloads\skills-main\skills-main\vibe-coding-skill\skills\sync-claude-config\scripts\sync-config.ps1" -Push -DryRun
+& "$env:USERPROFILE\vibe-coding-skill\skills\sync-claude-config\scripts\sync-config.ps1" -Push -DryRun
 ```
 
 Full push:
 
 ```powershell
-& "$env:USERPROFILE\Downloads\skills-main\skills-main\vibe-coding-skill\skills\sync-claude-config\scripts\sync-config.ps1" -Push
+& "$env:USERPROFILE\vibe-coding-skill\skills\sync-claude-config\scripts\sync-config.ps1" -Push
 ```
 
 With a custom commit message:
 
 ```powershell
-& "$env:USERPROFILE\Downloads\skills-main\skills-main\vibe-coding-skill\skills\sync-claude-config\scripts\sync-config.ps1" -Push -Message "Sync Claude config: updated model preference"
+& "$env:USERPROFILE\vibe-coding-skill\skills\sync-claude-config\scripts\sync-config.ps1" -Push -Message "Sync Claude config: updated model preference"
 ```
 
 ### Pull (cloud config to local)
@@ -64,7 +76,7 @@ With a custom commit message:
 Pulls the latest from GitHub and creates symlinks for any new skills.
 
 ```powershell
-& "$env:USERPROFILE\Downloads\skills-main\skills-main\vibe-coding-skill\skills\sync-claude-config\scripts\sync-config.ps1" -Pull
+& "$env:USERPROFILE\vibe-coding-skill\skills\sync-claude-config\scripts\sync-config.ps1" -Pull
 ```
 
 ## Default Workflow
