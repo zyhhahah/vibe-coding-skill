@@ -1,112 +1,95 @@
 ---
 name: sync-ai-assets
-description: Publish reusable AI assets from the repository to GitHub by reviewing git changes, drafting a commit message, and running the local sync script. Use when the user asks to sync, publish, push, upload, or update AI assets such as skills, prompts, playbooks, templates, or references.
+description: Push local AI assets (skills, settings, memory) to GitHub. Upload direction only — local changes → cloud. Use when the user asks to sync, publish, push, or upload AI assets.
 ---
 
 # Sync AI Assets
 
-## Use This Skill When
+## Direction
 
-- The user says "sync my AI assets", "publish this skill", or "push these prompts to GitHub".
-- The user has changed files under `skills/`, `prompts/`, `playbooks/`, `templates/`, or `references/`.
-- The user wants either a preview of the sync or the full commit-and-push flow.
+**Upload only** — push local changes to the cloud. For downloading/initializing from the cloud, use `/sync-claude-config`.
 
-## Expected Repository Layout
+## Where Assets Live
 
-This skill assumes the asset repository contains:
+The canonical location is `~/.claude/`, which must be a git repo connected to:
 
-- `tools/sync-assets.ps1`
-- `sync-assets.cmd`
-- asset folders such as `skills/`, `prompts/`, `playbooks/`, `templates/`, and `references/`
-
-If the sync script is missing, add or restore it before attempting to publish.
-
-## Default Workflow
-
-### 1. Inspect the repository state
-
-Run these checks first:
-
-- `git status --short`
-- `git diff -- <relevant paths>`
-- `git log --oneline -5`
-
-Summarize:
-
-- what changed
-- which asset types were touched
-- whether anything looks unrelated to the user's request
-
-### 2. Check for risky files
-
-Stop and warn the user if the pending changes include likely secrets or local-only files, for example:
-
-- `.env`
-- credentials files
-- tokens
-- private exports that should not be published
-
-Also stop if the working tree contains clearly unrelated changes and the user did not ask to sync everything.
-
-### 3. Decide between preview and publish
-
-Use preview mode when the user wants to inspect first:
-
-```powershell
-powershell.exe -NoProfile -ExecutionPolicy Bypass -File "tools/sync-assets.ps1" -DryRun
+```
+https://github.com/zyhhahah/vibe-coding-skill.git
 ```
 
-Use the full publish flow when the user explicitly asks to sync or push:
+Branch: `main`.
 
-```powershell
-powershell.exe -NoProfile -ExecutionPolicy Bypass -File "tools/sync-assets.ps1"
+## Prerequisites
+
+`~/.claude/` MUST already be a git repo. If it's not, tell the user to run `/sync-claude-config` first to clone from the cloud.
+
+Do NOT `git init` — that creates a fresh empty repo and loses the connection to existing cloud assets.
+
+## Workflow
+
+### 1. Check prerequisites
+
+```bash
+git -C ~/.claude status 2>&1
 ```
 
-If the user provided a commit message, pass it through:
+If this fails (not a git repo), stop and instruct: "Run /sync-claude-config first to initialize from the cloud."
 
-```powershell
-powershell.exe -NoProfile -ExecutionPolicy Bypass -File "tools/sync-assets.ps1" -Message "your message here"
+### 2. Check connectivity
+
+```bash
+git -C ~/.claude ls-remote --heads origin 2>&1
 ```
 
-If the user is already in the repository root on Windows, the wrapper is also valid:
+If this fails with "Couldn't connect" or similar, warn the user and offer to:
+- Commit locally now, push later when network is available
+- Skip entirely
 
-```bat
-sync-assets.cmd
+### 3. Inspect changes
+
+```bash
+git -C ~/.claude status --short
+git -C ~/.claude diff --stat
+git -C ~/.claude log --oneline -3
 ```
 
-### 4. Draft a good commit message
+### 4. Preview
 
-If the user did not provide a message, draft one that focuses on why the assets changed.
+Summarize what changed:
+- Modified files
+- New files
+- Deleted files
+- Any risky files (see Safety)
 
-Prefer concise messages such as:
+### 5. Stage
 
-- `Sync AI assets: skills`
-- `Sync AI assets: prompts, templates`
-- `Update publishing workflow for reusable AI assets`
+Stage only AI asset files:
 
-### 5. Report the result
+```bash
+git -C ~/.claude add skills/ settings.json memory/ .gitignore
+```
 
-After preview or publish, tell the user:
+Never use `git add -A` or `git add .` unless explicitly asked.
 
-- which files were included
-- which command was used
-- the commit hash if a commit was created
-- whether the push succeeded
+### 6. Commit
 
-## Safety Rules
+```bash
+git -C ~/.claude commit -m "Sync AI assets: <summary>"
+```
 
-- Never force push.
-- Never change git config.
-- Never skip hooks unless the user explicitly requests it.
-- Do not publish secrets or credentials.
-- If the user asked only for a preview, do not perform the real push.
+### 7. Push
 
-## Quick Response Pattern
+```bash
+git -C ~/.claude push origin main
+```
 
-When this skill is applied, follow this sequence:
+Report: commit hash and whether push succeeded.
 
-1. Check repo status.
-2. Summarize the pending asset changes.
-3. Draft or confirm the commit message.
-4. Run `-DryRun` for preview requests or the real sync command for publish requests.
-5. Report the outcome clearly.
+If push fails (network error), tell the user the commit is saved locally and can be pushed later with `git -C ~/.claude push origin main`.
+
+## Safety
+
+- Never force push
+- Never stage: `.credentials.json`, `.env`, files with `token`/`secret`/`key`/`password` in name
+- Always preview before committing
+- Never `git init`
