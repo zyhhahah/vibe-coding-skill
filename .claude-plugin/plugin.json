@@ -17,6 +17,7 @@
     "./skills/engineering/zoom-out",
     "./skills/productivity/caveman",
     "./skills/productivity/handoff",
+    "./skills/productivity/find-skills",
     "./skills/productivity/write-a-skill",
     "./skills/misc/git-guardrails-claude-code",
     "./skills/misc/migrate-to-shoehorn",

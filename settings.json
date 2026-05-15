@@ -12,19 +12,19 @@
     ]
   },
   "model": "opus",
-  "effortLevel": "high",
   "hooks": {
     "Stop": [
       {
         "hooks": [
           {
             "type": "command",
-            "shell": "powershell",
             "command": "$dir = Split-Path -Leaf (Get-Location); Add-Type -AssemblyName System.Windows.Forms; $icon = [System.Drawing.SystemIcons]::Information; $balloon = New-Object System.Windows.Forms.NotifyIcon; $balloon.Icon = $icon; $balloon.BalloonTipTitle = \"[$dir]\"; $balloon.BalloonTipText = 'Claude is ready — waiting for you'; $balloon.Visible = $true; $balloon.ShowBalloonTip(5000); Start-Sleep -Seconds 6; $balloon.Dispose()",
+            "shell": "powershell",
             "timeout": 10
           }
         ]
       }
     ]
-  }
+  },
+  "effortLevel": "high"
 }
